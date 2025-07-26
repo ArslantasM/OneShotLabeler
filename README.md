@@ -1,16 +1,16 @@
-# OneShotLabeler
+OneShotLabeler
 
-Tek sayfalık görsel etiketleme ve veri artırma (augmentation) aracı. YOLO ve COCO veri formatlarını destekler, hızlı ve verimli veri seti oluşturma süreçleri için idealdir.
+A single-page image labeling and data augmentation tool. Supports YOLO and COCO data formats, ideal for fast and efficient dataset creation.
 
-## Özellikler
+## Features
 
--  Görsel etiketleme: Tek sayfada hızlı bounding box çizimi
--  Veri artırma: Dönme, ölçekleme, parlaklık gibi işlemlerle veri çeşitlendirme
--  Format uyumu: YOLO ve COCO formatlarında çıktı alma
--  Önizleme: Etiketlenmiş verinin görsel önizlemesi
--  Basit Arayüz: Hızlı kullanım için sade ve işlevsel UI
+- Image labeling: Fast bounding box plotting in a single page
+- Data augmentation: Data manipulation with rotation, scaling, and brightness
+- Format compatibility: Output in YOLO and COCO formats
+- Preview: Visual preview of labeled data
+- Simple Interface: Simple and functional UI for quick use
 
-## Kurulum
+## Getting Started
 
 
 npm run dev
@@ -22,8 +22,8 @@ pnpm dev
 bun run dev
 ```
 
-Sonucu görmek için tarayıcınızda [http://localhost:3000](http://localhost:3000) adresini açın.
+To see the results, open [http://localhost:3000](http://localhost:3000) in your browser.
 
-`app/page.tsx` dosyasını değiştirerek sayfayı düzenlemeye başlayabilirsiniz. Dosyayı düzenledikçe sayfa otomatik olarak güncellenir.
+You can start editing the page by modifying the `app/page.tsx` file. The page will automatically update as you edit the file.
 
-Bu proje, özel bir Google Fontu olan Inter'i otomatik olarak optimize etmek ve yüklemek için [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) kullanır.
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
