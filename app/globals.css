@@ -25,3 +25,222 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+/* Input elemanları için text rengi düzeltmeleri - Daha güçlü kurallar */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="url"],
+input[type="tel"],
+textarea,
+select {
+  color: #1f2937 !important; /* slate-800 */
+  background-color: #ffffff !important;
+}
+
+input[type="text"]::placeholder,
+input[type="number"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder,
+input[type="search"]::placeholder,
+input[type="url"]::placeholder,
+input[type="tel"]::placeholder,
+textarea::placeholder {
+  color: #9ca3af !important; /* slate-400 */
+}
+
+/* Focus durumunda text rengi */
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+input[type="url"]:focus,
+input[type="tel"]:focus,
+textarea:focus,
+select:focus {
+  color: #1f2937 !important; /* slate-800 */
+}
+
+/* Disabled durumunda text rengi */
+input[type="text"]:disabled,
+input[type="number"]:disabled,
+input[type="email"]:disabled,
+input[type="password"]:disabled,
+input[type="search"]:disabled,
+input[type="url"]:disabled,
+input[type="tel"]:disabled,
+textarea:disabled,
+select:disabled {
+  color: #6b7280 !important; /* slate-500 */
+  background-color: #f3f4f6 !important; /* slate-100 */
+}
+
+/* Select option elemanları */
+select option {
+  color: #1f2937 !important; /* slate-800 */
+  background-color: #ffffff !important;
+}
+
+/* Dark mode override - input elemanları her zaman açık renkte olsun */
+@media (prefers-color-scheme: dark) {
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="url"],
+  input[type="tel"],
+  textarea,
+  select,
+  select option {
+    color: #1f2937 !important; /* slate-800 */
+    background-color: #ffffff !important;
+  }
+  
+  input[type="text"]::placeholder,
+  input[type="number"]::placeholder,
+  input[type="email"]::placeholder,
+  input[type="password"]::placeholder,
+  input[type="search"]::placeholder,
+  input[type="url"]::placeholder,
+  input[type="tel"]::placeholder,
+  textarea::placeholder {
+    color: #9ca3af !important; /* slate-400 */
+  }
+}
+
+/* Tailwind CSS input stillerini override etmek için daha spesifik kurallar */
+.border-slate-300 input[type="text"],
+.border-slate-300 input[type="number"],
+.border-slate-300 input[type="email"],
+.border-slate-300 input[type="password"],
+.border-slate-300 input[type="search"],
+.border-slate-300 input[type="url"],
+.border-slate-300 input[type="tel"],
+.border-slate-300 textarea,
+.border-slate-300 select {
+  color: #1f2937 !important; /* slate-800 */
+  background-color: #ffffff !important;
+}
+
+/* Focus ring rengini de düzelt */
+.focus\:ring-blue-500:focus {
+  --tw-ring-color: #3b82f6 !important;
+}
+
+/* Input elemanları için özel class'lar */
+.input-text-dark {
+  color: #1f2937 !important; /* slate-800 */
+  background-color: #ffffff !important;
+}
+
+.input-text-dark::placeholder {
+  color: #9ca3af !important; /* slate-400 */
+}
+
+/* Checkbox ve radio button'lar için */
+input[type="checkbox"],
+input[type="radio"] {
+  color: #3b82f6 !important; /* blue-600 */
+}
+
+/* Select dropdown için */
+select {
+  color: #1f2937 !important; /* slate-800 */
+  background-color: #ffffff !important;
+}
+
+select option {
+  color: #1f2937 !important; /* slate-800 */
+  background-color: #ffffff !important;
+}
+
+/* Textarea için */
+textarea {
+  color: #1f2937 !important; /* slate-800 */
+  background-color: #ffffff !important;
+}
+
+/* Tüm input elemanları için genel kural */
+*[class*="border-slate"] input,
+*[class*="border-slate"] textarea,
+*[class*="border-slate"] select {
+  color: #1f2937 !important; /* slate-800 */
+  background-color: #ffffff !important;
+}
+
+/* Range slider stilleri */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-track {
+  background: #e2e8f0;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #3b82f6;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.slider::-webkit-slider-thumb:hover {
+  background: #2563eb;
+  transform: scale(1.1);
+}
+
+.slider::-moz-range-track {
+  background: #e2e8f0;
+  height: 8px;
+  border-radius: 4px;
+  border: none;
+}
+
+.slider::-moz-range-thumb {
+  background: #3b82f6;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.slider::-moz-range-thumb:hover {
+  background: #2563eb;
+  transform: scale(1.1);
+}
+
+/* Range slider için özel renkler */
+.slider.blue::-webkit-slider-thumb {
+  background: #3b82f6;
+}
+
+.slider.green::-webkit-slider-thumb {
+  background: #10b981;
+}
+
+.slider.purple::-webkit-slider-thumb {
+  background: #8b5cf6;
+}
+
+.slider.orange::-webkit-slider-thumb {
+  background: #f59e0b;
+}
+
+.slider.red::-webkit-slider-thumb {
+  background: #ef4444;
+}
