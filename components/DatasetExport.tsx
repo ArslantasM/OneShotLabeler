@@ -24,7 +24,7 @@ interface ImageFile {
 
 interface DatasetExportProps {
   images: ImageFile[];
-  onExportComplete: () => void;
+  onExportComplete?: () => void;
 }
 
 type ExportFormat = 'yolo' | 'coco' | 'pascal';
@@ -179,7 +179,7 @@ export default function DatasetExport({ images, onExportComplete }: DatasetExpor
           imagesFolder?.file(image.file.name, imageBlob);
 
           // Get image dimensions
-          const img = new Image();
+          const img = document.createElement('img') as HTMLImageElement;
           await new Promise<void>((resolve) => {
             img.onload = () => resolve();
             img.src = image.url;
@@ -386,7 +386,7 @@ Bu dataset AI Veri Etiketleme Platformu kullanılarak oluşturulmuştur.
                     const test = remaining - val;
                     setSplitRatio({ train, val, test });
                   }}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg input-text-dark"
                   min="10"
                   max="90"
                 />
@@ -403,7 +403,7 @@ Bu dataset AI Veri Etiketleme Platformu kullanılarak oluşturulmuştur.
                     const remaining = 100 - splitRatio.train - val;
                     setSplitRatio({ ...splitRatio, val, test: remaining });
                   }}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg input-text-dark"
                   min="5"
                   max="50"
                 />
@@ -416,7 +416,7 @@ Bu dataset AI Veri Etiketleme Platformu kullanılarak oluşturulmuştur.
                   type="number"
                   value={splitRatio.test}
                   readOnly
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-slate-50"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-slate-50 input-text-dark"
                 />
               </div>
             </div>

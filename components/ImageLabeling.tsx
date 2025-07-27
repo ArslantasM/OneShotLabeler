@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, Plus, Trash2, Eye, EyeOff } from 'lucide-react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { Eye, EyeOff, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
+import { useTranslation, Language } from '@/lib/i18n';
 
 interface Label {
   id: string;
@@ -25,29 +26,61 @@ interface ImageLabelingProps {
   currentIndex: number;
   onImageLabeled: (imageId: string, labels: Label[]) => void;
   onIndexChange: (index: number) => void;
+  language?: Language;
 }
 
-export default function ImageLabeling({ images, currentIndex, onImageLabeled, onIndexChange }: ImageLabelingProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+export default function ImageLabeling({ 
+  images, 
+  currentIndex, 
+  onImageLabeled, 
+  onIndexChange,
+  language = 'tr'
+}: ImageLabelingProps) {
+  const [showLabels, setShowLabels] = useState(true);
+  const [newClassName, setNewClassName] = useState('');
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
   const [currentRect, setCurrentRect] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
-  const [newClassName, setNewClassName] = useState('');
-  const [showLabels, setShowLabels] = useState(true);
   const [scale, setScale] = useState(1);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
-
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const offscreenCanvasRef = useRef<HTMLCanvasElement>(null);
+  
+  const t = useTranslation(language);
+  
   const currentImage = images[currentIndex];
+
+  // Debounced canvas redraw
+  const debouncedDrawCanvas = useCallback(
+    debounce(() => {
+      drawCanvas();
+    }, 16), // ~60fps
+    []
+  );
+
+  function debounce<T extends (...args: any[]) => any>(func: T, wait: number): T {
+    let timeout: NodeJS.Timeout;
+    return ((...args: any[]) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    }) as T;
+  }
 
   const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas || !currentImage) return;
+    const offscreenCanvas = offscreenCanvasRef.current;
+    if (!canvas || !offscreenCanvas || !currentImage) return;
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    const offscreenCtx = offscreenCanvas.getContext('2d');
+    if (!ctx || !offscreenCtx) return;
 
     const img = new Image();
     img.onload = () => {
+      setIsLoading(true);
+      
       // Calculate scale to fit image in canvas
       const maxWidth = 800;
       const maxHeight = 600;
@@ -60,47 +93,56 @@ export default function ImageLabeling({ images, currentIndex, onImageLabeled, on
       
       canvas.width = img.width * newScale;
       canvas.height = img.height * newScale;
+      offscreenCanvas.width = img.width * newScale;
+      offscreenCanvas.height = img.height * newScale;
       
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      // Draw on offscreen canvas first
+      offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+      offscreenCtx.drawImage(img, 0, 0, offscreenCanvas.width, offscreenCanvas.height);
       
-      // Draw existing labels
+      // Draw existing labels on offscreen canvas
       if (showLabels) {
         currentImage.labels.forEach((label, index) => {
-          ctx.strokeStyle = `hsl(${index * 137.5 % 360}, 70%, 50%)`;
-          ctx.fillStyle = `hsla(${index * 137.5 % 360}, 70%, 50%, 0.2)`;
-          ctx.lineWidth = 2;
+          offscreenCtx.strokeStyle = `hsl(${index * 137.5 % 360}, 70%, 50%)`;
+          offscreenCtx.fillStyle = `hsla(${index * 137.5 % 360}, 70%, 50%, 0.2)`;
+          offscreenCtx.lineWidth = 2;
           
           const x = label.x * newScale;
           const y = label.y * newScale;
           const width = label.width * newScale;
           const height = label.height * newScale;
           
-          ctx.fillRect(x, y, width, height);
-          ctx.strokeRect(x, y, width, height);
+          offscreenCtx.fillRect(x, y, width, height);
+          offscreenCtx.strokeRect(x, y, width, height);
           
           // Draw label text
-          ctx.fillStyle = `hsl(${index * 137.5 % 360}, 70%, 30%)`;
-          ctx.font = '14px Inter, sans-serif';
-          ctx.fillText(label.className, x, y - 5);
+          offscreenCtx.fillStyle = `hsl(${index * 137.5 % 360}, 70%, 30%)`;
+          offscreenCtx.font = '14px Inter, sans-serif';
+          offscreenCtx.fillText(label.className, x, y - 5);
         });
       }
       
-      // Draw current rectangle being drawn
-      if (currentRect) {
+      // Copy from offscreen to main canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(offscreenCanvas, 0, 0);
+      
+      // Draw current rectangle being drawn on main canvas
+      if (currentRect && isDrawing) {
         ctx.strokeStyle = '#3b82f6';
         ctx.fillStyle = 'rgba(59, 130, 246, 0.2)';
         ctx.lineWidth = 2;
         ctx.fillRect(currentRect.x, currentRect.y, currentRect.width, currentRect.height);
         ctx.strokeRect(currentRect.x, currentRect.y, currentRect.width, currentRect.height);
       }
+      
+      setIsLoading(false);
     };
     img.src = currentImage.url;
-  }, [currentImage, showLabels, currentRect]);
+  }, [currentImage, showLabels, currentRect, isDrawing]);
 
   useEffect(() => {
-    drawCanvas();
-  }, [drawCanvas]);
+    debouncedDrawCanvas();
+  }, [debouncedDrawCanvas]);
 
   const getMousePos = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
@@ -132,12 +174,37 @@ export default function ImageLabeling({ images, currentIndex, onImageLabeled, on
     const width = pos.x - startPos.x;
     const height = pos.y - startPos.y;
     
-    setCurrentRect({
+    const newRect = {
       x: width < 0 ? pos.x : startPos.x,
       y: height < 0 ? pos.y : startPos.y,
       width: Math.abs(width),
       height: Math.abs(height)
-    });
+    };
+    
+    setCurrentRect(newRect);
+    
+    // Gerçek zamanlı çizim için canvas'ı güncelle
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        // Mevcut canvas'ı temizle ve yeniden çiz
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Offscreen canvas'tan kopyala
+        const offscreenCanvas = offscreenCanvasRef.current;
+        if (offscreenCanvas) {
+          ctx.drawImage(offscreenCanvas, 0, 0);
+        }
+        
+        // Yeni dikdörtgeni çiz
+        ctx.strokeStyle = '#3b82f6';
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.2)';
+        ctx.lineWidth = 2;
+        ctx.fillRect(newRect.x, newRect.y, newRect.width, newRect.height);
+        ctx.strokeRect(newRect.x, newRect.y, newRect.width, newRect.height);
+      }
+    }
   };
 
   const handleMouseUp = () => {
@@ -182,7 +249,7 @@ export default function ImageLabeling({ images, currentIndex, onImageLabeled, on
   if (!currentImage) {
     return (
       <div className="p-8 text-center">
-        <p className="text-slate-600">Etiketlenecek görsel bulunamadı.</p>
+        <p className="text-slate-600">{t.noImages}</p>
       </div>
     );
   }
@@ -190,7 +257,7 @@ export default function ImageLabeling({ images, currentIndex, onImageLabeled, on
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-slate-800">Görsel Etiketleme</h2>
+        <h2 className="text-2xl font-bold text-slate-800">{t.labelingTitle}</h2>
         <div className="flex items-center space-x-4">
           <button
             onClick={() => setShowLabels(!showLabels)}
@@ -199,7 +266,7 @@ export default function ImageLabeling({ images, currentIndex, onImageLabeled, on
             }`}
           >
             {showLabels ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-            <span>Etiketleri {showLabels ? 'Gizle' : 'Göster'}</span>
+            <span>{showLabels ? t.hideLabels : t.showLabels}</span>
           </button>
           <div className="text-sm text-slate-600">
             {currentIndex + 1} / {images.length}
@@ -232,14 +299,25 @@ export default function ImageLabeling({ images, currentIndex, onImageLabeled, on
             </div>
             
             <div className="flex justify-center">
-              <canvas
-                ref={canvasRef}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                className="border border-slate-300 rounded-lg cursor-crosshair max-w-full"
-                style={{ maxHeight: '600px' }}
-              />
+              <div className="relative">
+                <canvas
+                  ref={canvasRef}
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  className="border border-slate-300 rounded-lg cursor-crosshair max-w-full"
+                  style={{ maxHeight: '600px' }}
+                />
+                <canvas
+                  ref={offscreenCanvasRef}
+                  style={{ display: 'none' }}
+                />
+                {isLoading && (
+                  <div className="absolute inset-0 bg-slate-900/20 rounded-lg flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -254,7 +332,7 @@ export default function ImageLabeling({ images, currentIndex, onImageLabeled, on
                 value={newClassName}
                 onChange={(e) => setNewClassName(e.target.value)}
                 placeholder="Örn: araba, kişi, bina..."
-                className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent input-text-dark"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
