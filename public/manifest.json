@@ -1,0 +1,58 @@
+{
+  "name": "OneShotLabeler - AI Veri Etiketleme Platformu",
+  "short_name": "OneShotLabeler",
+  "description": "Hızlı ve verimli görsel veri etiketleme ve augmentation platformu",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "tr",
+  "categories": ["productivity", "utilities", "photo"],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Yeni Proje",
+      "short_name": "Yeni",
+      "description": "Yeni bir etiketleme projesi başlat",
+      "url": "/?step=upload",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Etiketleme",
+      "short_name": "Etiketle",
+      "description": "Görselleri etiketle",
+      "url": "/?step=labeling",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+} 
