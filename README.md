@@ -2,9 +2,9 @@
 
 Hızlı ve verimli görsel veri etiketleme ve augmentation platformu. YOLO, COCO ve Pascal VOC formatlarında veri seti oluşturun.
 
-## 🚀 Özellikler
+##  Özellikler
 
-### 📸 Görsel Etiketleme
+###  Görsel Etiketleme
 - **Canvas Tabanlı Etiketleme:** HTML5 Canvas API ile gerçek zamanlı bounding box çizimi
 - **Çoklu Görsel Desteği:** Birden fazla görseli aynı anda yükleme ve etiketleme
 - **Sınıf Yönetimi:** Özel sınıf isimleri tanımlama ve yönetme
@@ -13,7 +13,7 @@ Hızlı ve verimli görsel veri etiketleme ve augmentation platformu. YOLO, COCO
 - **Etiket Görünürlük Kontrolü:** Etiketleri göster/gizle özelliği
 - **Görsel Gezinme:** İleri/geri butonları ile kolay geçiş
 
-### 🔄 Veri Augmentation
+###  Veri Augmentation
 - **12 Farklı Efekt:** Blur, Brightness, Contrast, Rotation, Noise, Flip, Saturation, Hue, Gamma, Sharpen, Emboss, Sepia
 - **Min-Max Kontrolü:** Her efekt için özelleştirilebilir değer aralıkları
 - **Adet Yönetimi:** Her efekt için ayrı ayrı üretilecek veri adedi belirleme
@@ -21,20 +21,20 @@ Hızlı ve verimli görsel veri etiketleme ve augmentation platformu. YOLO, COCO
 - **Batch İşleme:** Tüm etiketlenmiş görseller için toplu augmentation
 - **Önizleme Sidebar:** Aktif efektlerin gerçek zamanlı önizlemesi
 
-### 📦 Veri Dışa Aktarma
+###  Veri Dışa Aktarma
 - **Çoklu Format Desteği:** YOLO, COCO, Pascal VOC
 - **Otomatik Klasör Yapısı:** Format standartlarına uygun dizin organizasyonu
 - **ZIP Arşivleme:** Tüm verileri tek dosyada indirme
 - **Split Oranları:** Train/Validation/Test ayrımı için özelleştirilebilir oranlar
 - **Progress Tracking:** İşlem durumu ve ilerleme göstergeleri
 
-### 🌐 Çoklu Dil Desteği
+###  Çoklu Dil Desteği
 - **Türkçe ve İngilizce:** Tam arayüz çevirisi
 - **Dinamik Dil Değişimi:** Sayfa yenilenmeden dil değiştirme
 - **Dil Seçici:** Header'da kolay dil değiştirme
 - **Kapsamlı Çeviri:** Tüm arayüz metinleri çevrildi
 
-### 🎨 Kullanıcı Deneyimi
+###  Kullanıcı Deneyimi
 - **Drag & Drop:** Sürükle-bırak ile kolay dosya yükleme
 - **Responsive Tasarım:** Mobil ve masaüstü uyumlu arayüz
 - **Progress Tracking:** İşlem durumu ve ilerleme göstergeleri
@@ -42,7 +42,7 @@ Hızlı ve verimli görsel veri etiketleme ve augmentation platformu. YOLO, COCO
 - **Memory Management:** Otomatik bellek temizleme ve optimizasyon
 - **Modern UI:** Tailwind CSS ile şık ve modern arayüz
 
-## 🛠️ Teknolojiler
+##  Teknolojiler
 
 - **Frontend:** Next.js 13.5.11, React 18.2.0, TypeScript 5.2.2
 - **Styling:** Tailwind CSS 3.3.3
@@ -53,13 +53,13 @@ Hızlı ve verimli görsel veri etiketleme ve augmentation platformu. YOLO, COCO
 - **Performance:** Next.js Image optimization, debouncing, offscreen canvas
 - **Internationalization:** Custom i18n system for Turkish and English
 
-## 📋 Gereksinimler
+##  Gereksinimler
 
 - Node.js 18.0.0 veya üzeri
 - npm 9.0.0 veya üzeri
 - Modern web tarayıcısı (Chrome, Firefox, Safari, Edge)
 
-## 🚀 Kurulum
+##  Kurulum
 
 1. **Projeyi klonlayın:**
 ```bash
@@ -116,7 +116,7 @@ http://localhost:3000
 - Türkçe ve İngilizce arasında geçiş yapın
 - Değişiklik anında uygulanır
 
-## 📁 Proje Yapısı
+##  Proje Yapısı
 
 ```
 OneShotLabeler/
@@ -142,7 +142,7 @@ OneShotLabeler/
 └── tsconfig.json          # TypeScript yapılandırması
 ```
 
-## 🔧 Geliştirme
+##  Geliştirme
 
 ### Linting
 ```bash
@@ -164,7 +164,7 @@ npm run build
 npm start
 ```
 
-## 🎯 Teknik Detaylar
+##  Teknik Detaylar
 
 ### Performans Optimizasyonları
 - **Next.js Image Component:** Otomatik görsel optimizasyonu
@@ -188,7 +188,7 @@ npm start
 - **TypeScript Support:** Tip güvenli çeviri anahtarları
 - **Dynamic Language Switching:** Gerçek zamanlı dil değişimi
 
-## 🌐 Çoklu Dil Desteği
+##  Çoklu Dil Desteği
 
 Uygulama hem Türkçe hem İngilizce dil desteği sunar:
 
@@ -202,13 +202,13 @@ Uygulama hem Türkçe hem İngilizce dil desteği sunar:
 - İngilizce hata mesajları
 - İngilizce dokümantasyon
 
-## 🐛 Bilinen Sorunlar
+##  Bilinen Sorunlar
 
 - Büyük dosyalar (>10MB) yavaş yüklenebilir
 - Çok fazla augmentation efekti aynı anda kullanıldığında performans düşebilir
 - Bazı eski tarayıcılarda canvas API desteği sınırlı olabilir
 
-## 🚧 Gelecek Özellikler
+##  Gelecek Özellikler
 
 - [ ] AI destekli otomatik etiketleme
 - [ ] Daha fazla augmentation efekti
@@ -225,23 +225,23 @@ Uygulama hem Türkçe hem İngilizce dil desteği sunar:
 - [ ] Keyboard shortcuts
 - [ ] Undo/Redo özellikleri
 
-## 📄 Lisans
+##  Lisans
 
 Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
 
-## 👥 Katkıda Bulunanlar
+##  Katkıda Bulunanlar
 
 - **Geliştirici:** OneShotLabeler Team
 - **Tasarım:** Modern UI/UX principles
 - **Test:** Community feedback
 
-## 📞 İletişim
+##  İletişim
 
 - **GitHub:** [OneShotLabeler Repository](https://github.com/your-username/OneShotLabeler)
 - **Email:** support@oneshotlabeler.com
 - **Discord:** [OneShotLabeler Community](https://discord.gg/oneshotlabeler)
 
-## 🙏 Teşekkürler
+##  Teşekkürler
 
 - Next.js ekibine harika framework için
 - Tailwind CSS ekibine mükemmel CSS framework için
@@ -250,4 +250,4 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 
 ---
 
-**OneShotLabeler** - AI destekli veri etiketleme platformu ile makine öğrenmesi projelerinizi hızlandırın! 🚀
+**OneShotLabeler** - Veri etiketleme platformu ile makine öğrenmesi projelerinizi hızlandırın! 
