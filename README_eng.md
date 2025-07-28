@@ -1,8 +1,8 @@
-# OneShotLabeler - AI Data Labeling Platform
+# OneShotLabeler - Data Labeling Platform
 
 Fast and efficient visual data labeling and augmentation platform. Create datasets in YOLO, COCO, and Pascal VOC formats.
 
-## 🚀 Features
+##  Features
 
 ### 📸 Visual Labeling
 - **Canvas-Based Labeling:** Real-time bounding box drawing with HTML5 Canvas API
@@ -13,7 +13,7 @@ Fast and efficient visual data labeling and augmentation platform. Create datase
 - **Label Visibility Control:** Show/hide labels feature
 - **Image Navigation:** Easy navigation with next/previous buttons
 
-### 🔄 Data Augmentation
+###  Data Augmentation
 - **12 Different Effects:** Blur, Brightness, Contrast, Rotation, Noise, Flip, Saturation, Hue, Gamma, Sharpen, Emboss, Sepia
 - **Min-Max Control:** Customizable value ranges for each effect
 - **Count Management:** Specify the number of augmented data for each effect
@@ -21,20 +21,20 @@ Fast and efficient visual data labeling and augmentation platform. Create datase
 - **Batch Processing:** Bulk augmentation for all labeled images
 - **Preview Sidebar:** Real-time preview of active effects
 
-### 📦 Data Export
+###  Data Export
 - **Multiple Format Support:** YOLO, COCO, Pascal VOC
 - **Automatic Folder Structure:** Directory organization according to format standards
 - **ZIP Archiving:** Download all data in a single file
 - **Split Ratios:** Customizable ratios for Train/Validation/Test separation
 - **Progress Tracking:** Process status and progress indicators
 
-### 🌐 Multi-Language Support
+###  Multi-Language Support
 - **Turkish and English:** Complete interface translation
 - **Dynamic Language Switching:** Change language without page refresh
 - **Language Selector:** Easy language switching in header
 - **Comprehensive Translation:** All interface texts translated
 
-### 🎨 User Experience
+###  User Experience
 - **Drag & Drop:** Easy file upload with drag and drop
 - **Responsive Design:** Mobile and desktop compatible interface
 - **Progress Tracking:** Process status and progress indicators
@@ -42,7 +42,7 @@ Fast and efficient visual data labeling and augmentation platform. Create datase
 - **Memory Management:** Automatic memory cleanup and optimization
 - **Modern UI:** Elegant and modern interface with Tailwind CSS
 
-## 🛠️ Technologies
+##  Technologies
 
 - **Frontend:** Next.js 13.5.11, React 18.2.0, TypeScript 5.2.2
 - **Styling:** Tailwind CSS 3.3.3
@@ -53,13 +53,13 @@ Fast and efficient visual data labeling and augmentation platform. Create datase
 - **Performance:** Next.js Image optimization, debouncing, offscreen canvas
 - **Internationalization:** Custom i18n system for Turkish and English
 
-## 📋 Requirements
+##  Requirements
 
 - Node.js 18.0.0 or higher
 - npm 9.0.0 or higher
 - Modern web browser (Chrome, Firefox, Safari, Edge)
 
-## 🚀 Installation
+##  Installation
 
 1. **Clone the project:**
 ```bash
@@ -82,7 +82,7 @@ npm run dev
 http://localhost:3000
 ```
 
-## 📖 Usage Guide
+##  Usage Guide
 
 ### 1. Image Upload
 - Click "Select Files" button on the main page
@@ -116,7 +116,7 @@ http://localhost:3000
 - Switch between Turkish and English
 - Changes are applied instantly
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 OneShotLabeler/
@@ -142,7 +142,7 @@ OneShotLabeler/
 └── tsconfig.json          # TypeScript configuration
 ```
 
-## 🔧 Development
+##  Development
 
 ### Linting
 ```bash
@@ -164,7 +164,7 @@ npm run build
 npm start
 ```
 
-## 🎯 Technical Details
+##  Technical Details
 
 ### Performance Optimizations
 - **Next.js Image Component:** Automatic image optimization
@@ -188,7 +188,7 @@ npm start
 - **TypeScript Support:** Type-safe translation keys
 - **Dynamic Language Switching:** Real-time language change
 
-## 🌐 Multi-Language Support
+##  Multi-Language Support
 
 The application supports both Turkish and English:
 
@@ -202,13 +202,13 @@ The application supports both Turkish and English:
 - English error messages
 - English documentation
 
-## 🐛 Known Issues
+##  Known Issues
 
 - Large files (>10MB) may load slowly
 - Performance may decrease when using too many augmentation effects simultaneously
 - Canvas API support may be limited in some older browsers
 
-## 🚧 Future Features
+##  Future Features
 
 - [ ] AI-powered automatic labeling
 - [ ] More augmentation effects
@@ -225,23 +225,23 @@ The application supports both Turkish and English:
 - [ ] Keyboard shortcuts
 - [ ] Undo/Redo features
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## 👥 Contributors
+##  Contributors
 
 - **Developer:** OneShotLabeler Team
 - **Design:** Modern UI/UX principles
 - **Testing:** Community feedback
 
-## 📞 Contact
+##  Contact
 
 - **GitHub:** [OneShotLabeler Repository](https://github.com/your-username/OneShotLabeler)
 - **Email:** support@oneshotlabeler.com
 - **Discord:** [OneShotLabeler Community](https://discord.gg/oneshotlabeler)
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - Next.js team for the amazing framework
 - Tailwind CSS team for the excellent CSS framework
@@ -250,4 +250,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
-**OneShotLabeler** - Accelerate your machine learning projects with AI-powered data labeling platform! 🚀 
+**OneShotLabeler** - Accelerate your machine learning projects with data labeling platform! 
