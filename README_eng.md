@@ -4,7 +4,7 @@ Fast and efficient visual data labeling and augmentation platform. Create datase
 
 ##  Features
 
-### 📸 Visual Labeling
+###  Visual Labeling
 - **Canvas-Based Labeling:** Real-time bounding box drawing with HTML5 Canvas API
 - **Multiple Image Support:** Load and label multiple images simultaneously
 - **Class Management:** Define and manage custom class names
