@@ -4,6 +4,15 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Eye, EyeOff, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
 import { useTranslation, Language } from '@/lib/i18n';
 
+// Debounce utility function
+function debounce<T extends (...args: any[]) => any>(func: T, wait: number): T {
+  let timeout: NodeJS.Timeout;
+  return ((...args: any[]) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  }) as T;
+}
+
 interface Label {
   id: string;
   x: number;
@@ -44,6 +53,7 @@ export default function ImageLabeling({
   const [scale, setScale] = useState(1);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [isLoading, setIsLoading] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const offscreenCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -52,97 +62,124 @@ export default function ImageLabeling({
   
   const currentImage = images[currentIndex];
 
-  // Debounced canvas redraw
-  const debouncedDrawCanvas = useCallback(
-    debounce(() => {
-      drawCanvas();
-    }, 16), // ~60fps
-    []
-  );
-
-  function debounce<T extends (...args: any[]) => any>(func: T, wait: number): T {
-    let timeout: NodeJS.Timeout;
-    return ((...args: any[]) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func(...args), wait);
-    }) as T;
-  }
-
   const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     const offscreenCanvas = offscreenCanvasRef.current;
-    if (!canvas || !offscreenCanvas || !currentImage) return;
+    if (!canvas || !offscreenCanvas || !currentImage || imageLoaded) return;
 
     const ctx = canvas.getContext('2d');
     const offscreenCtx = offscreenCanvas.getContext('2d');
     if (!ctx || !offscreenCtx) return;
 
-    const img = new Image();
-    img.onload = () => {
-      setIsLoading(true);
+    // Set loading state first
+    setIsLoading(true);
+    
+    try {
+      // Create a fresh blob URL from the file
+      const freshBlob = new Blob([currentImage.file], { type: currentImage.file.type });
+      const freshUrl = URL.createObjectURL(freshBlob);
       
-      // Calculate scale to fit image in canvas
-      const maxWidth = 800;
-      const maxHeight = 600;
-      const scaleX = maxWidth / img.width;
-      const scaleY = maxHeight / img.height;
-      const newScale = Math.min(scaleX, scaleY, 1);
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
       
-      setScale(newScale);
-      setImageSize({ width: img.width * newScale, height: img.height * newScale });
-      
-      canvas.width = img.width * newScale;
-      canvas.height = img.height * newScale;
-      offscreenCanvas.width = img.width * newScale;
-      offscreenCanvas.height = img.height * newScale;
-      
-      // Draw on offscreen canvas first
-      offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
-      offscreenCtx.drawImage(img, 0, 0, offscreenCanvas.width, offscreenCanvas.height);
-      
-      // Draw existing labels on offscreen canvas
-      if (showLabels) {
-        currentImage.labels.forEach((label, index) => {
-          offscreenCtx.strokeStyle = `hsl(${index * 137.5 % 360}, 70%, 50%)`;
-          offscreenCtx.fillStyle = `hsla(${index * 137.5 % 360}, 70%, 50%, 0.2)`;
-          offscreenCtx.lineWidth = 2;
+      img.onload = () => {
+        try {
+          // Calculate scale to fit image in canvas
+          const maxWidth = 800;
+          const maxHeight = 600;
+          const scaleX = maxWidth / img.width;
+          const scaleY = maxHeight / img.height;
+          const newScale = Math.min(scaleX, scaleY, 1);
           
-          const x = label.x * newScale;
-          const y = label.y * newScale;
-          const width = label.width * newScale;
-          const height = label.height * newScale;
+          setScale(newScale);
+          setImageSize({ width: img.width * newScale, height: img.height * newScale });
           
-          offscreenCtx.fillRect(x, y, width, height);
-          offscreenCtx.strokeRect(x, y, width, height);
+          canvas.width = img.width * newScale;
+          canvas.height = img.height * newScale;
+          offscreenCanvas.width = img.width * newScale;
+          offscreenCanvas.height = img.height * newScale;
           
-          // Draw label text
-          offscreenCtx.fillStyle = `hsl(${index * 137.5 % 360}, 70%, 30%)`;
-          offscreenCtx.font = '14px Inter, sans-serif';
-          offscreenCtx.fillText(label.className, x, y - 5);
-        });
-      }
+          // Draw on offscreen canvas first
+          offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+          offscreenCtx.drawImage(img, 0, 0, offscreenCanvas.width, offscreenCanvas.height);
+          
+          // Draw existing labels on offscreen canvas
+          if (showLabels) {
+            currentImage.labels.forEach((label, index) => {
+              offscreenCtx.strokeStyle = `hsl(${index * 137.5 % 360}, 70%, 50%)`;
+              offscreenCtx.fillStyle = `hsla(${index * 137.5 % 360}, 70%, 50%, 0.2)`;
+              offscreenCtx.lineWidth = 2;
+              
+              const x = label.x * newScale;
+              const y = label.y * newScale;
+              const width = label.width * newScale;
+              const height = label.height * newScale;
+              
+              offscreenCtx.fillRect(x, y, width, height);
+              offscreenCtx.strokeRect(x, y, width, height);
+              
+              // Draw label text
+              offscreenCtx.fillStyle = `hsl(${index * 137.5 % 360}, 70%, 30%)`;
+              offscreenCtx.font = '14px Inter, sans-serif';
+              offscreenCtx.fillText(label.className, x, y - 5);
+            });
+          }
+          
+          // Copy from offscreen to main canvas
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(offscreenCanvas, 0, 0);
+          
+          // Draw current rectangle being drawn on main canvas
+          if (currentRect && isDrawing) {
+            ctx.strokeStyle = '#3b82f6';
+            ctx.fillStyle = 'rgba(59, 130, 246, 0.2)';
+            ctx.lineWidth = 2;
+            ctx.fillRect(currentRect.x, currentRect.y, currentRect.width, currentRect.height);
+            ctx.strokeRect(currentRect.x, currentRect.y, currentRect.width, currentRect.height);
+          }
+          
+          setIsLoading(false);
+          setImageLoaded(true);
+          console.log('Canvas successfully drawn for:', currentImage.file.name);
+          
+          // Clean up the fresh URL
+          URL.revokeObjectURL(freshUrl);
+        } catch (error) {
+          console.error('Error drawing canvas:', error);
+          setIsLoading(false);
+          URL.revokeObjectURL(freshUrl);
+        }
+      };
       
-      // Copy from offscreen to main canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(offscreenCanvas, 0, 0);
+      img.onerror = (error) => {
+        console.error('Failed to load image:', error);
+        setIsLoading(false);
+        URL.revokeObjectURL(freshUrl);
+      };
       
-      // Draw current rectangle being drawn on main canvas
-      if (currentRect && isDrawing) {
-        ctx.strokeStyle = '#3b82f6';
-        ctx.fillStyle = 'rgba(59, 130, 246, 0.2)';
-        ctx.lineWidth = 2;
-        ctx.fillRect(currentRect.x, currentRect.y, currentRect.width, currentRect.height);
-        ctx.strokeRect(currentRect.x, currentRect.y, currentRect.width, currentRect.height);
-      }
-      
+      img.src = freshUrl;
+    } catch (error) {
+      console.error('Error creating blob URL:', error);
       setIsLoading(false);
-    };
-    img.src = currentImage.url;
-  }, [currentImage, showLabels, currentRect, isDrawing]);
+    }
+  }, [currentImage, showLabels, currentRect, isDrawing, imageLoaded]);
 
+  // Canvas drawing effect with proper dependency management
   useEffect(() => {
-    debouncedDrawCanvas();
-  }, [debouncedDrawCanvas]);
+    if (currentImage && !imageLoaded) {
+      console.log('DrawCanvas effect triggered for:', currentImage.file.name, 'index:', currentIndex);
+      const timer = setTimeout(() => {
+        drawCanvas();
+      }, 50);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [currentImage.id, currentIndex, drawCanvas, imageLoaded]);
+
+  // Reset image loaded state when image changes
+  useEffect(() => {
+    setImageLoaded(false);
+  }, [currentImage.id]);
 
   const getMousePos = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
@@ -183,21 +220,21 @@ export default function ImageLabeling({
     
     setCurrentRect(newRect);
     
-    // Gerçek zamanlı çizim için canvas'ı güncelle
+    // Real-time drawing for canvas update
     const canvas = canvasRef.current;
     if (canvas) {
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        // Mevcut canvas'ı temizle ve yeniden çiz
+        // Clear current canvas and redraw
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Offscreen canvas'tan kopyala
+        // Copy from offscreen canvas
         const offscreenCanvas = offscreenCanvasRef.current;
         if (offscreenCanvas) {
           ctx.drawImage(offscreenCanvas, 0, 0);
         }
         
-        // Yeni dikdörtgeni çiz
+        // Draw new rectangle
         ctx.strokeStyle = '#3b82f6';
         ctx.fillStyle = 'rgba(59, 130, 246, 0.2)';
         ctx.lineWidth = 2;
@@ -236,12 +273,14 @@ export default function ImageLabeling({
 
   const nextImage = () => {
     if (currentIndex < images.length - 1) {
+      console.log('Next image clicked: current =', currentIndex, 'going to =', currentIndex + 1);
       onIndexChange(currentIndex + 1);
     }
   };
 
   const prevImage = () => {
     if (currentIndex > 0) {
+      console.log('Previous image clicked: current =', currentIndex, 'going to =', currentIndex - 1);
       onIndexChange(currentIndex - 1);
     }
   };
@@ -301,6 +340,7 @@ export default function ImageLabeling({
             <div className="flex justify-center">
               <div className="relative">
                 <canvas
+                  key={currentImage.id}
                   ref={canvasRef}
                   onMouseDown={handleMouseDown}
                   onMouseMove={handleMouseMove}
@@ -309,6 +349,7 @@ export default function ImageLabeling({
                   style={{ maxHeight: '600px' }}
                 />
                 <canvas
+                  key={`offscreen-${currentImage.id}`}
                   ref={offscreenCanvasRef}
                   style={{ display: 'none' }}
                 />
@@ -324,7 +365,7 @@ export default function ImageLabeling({
           {/* Class Name Input */}
           <div className="bg-white rounded-xl p-4 border border-slate-200">
             <label className="block text-sm font-medium text-slate-700 mb-2">
-              Yeni Etiket Sınıfı
+              {t.classLabel}
             </label>
             <div className="flex space-x-2">
               <input

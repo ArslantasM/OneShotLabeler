@@ -53,7 +53,7 @@ export default function DatasetExport({ images, onExportComplete }: DatasetExpor
     }).join('\n');
   };
 
-  const convertToCOCO = () => {
+  const convertToCOCO = (splitImages: ImageFile[], splitImageDimensions: Array<{width: number, height: number}>) => {
     const cocoData = {
       info: {
         description: "AI Veri Etiketleme Platformu Dataset",
@@ -73,11 +73,12 @@ export default function DatasetExport({ images, onExportComplete }: DatasetExpor
     };
 
     let annotationId = 1;
-    labeledImages.forEach((image, imageIndex) => {
+    splitImages.forEach((image, imageIndex) => {
+      const dimensions = splitImageDimensions[imageIndex];
       cocoData.images.push({
         id: imageIndex,
-        width: 0, // Will be set when processing
-        height: 0, // Will be set when processing
+        width: dimensions.width,
+        height: dimensions.height,
         file_name: image.file.name
       });
 
@@ -172,38 +173,73 @@ export default function DatasetExport({ images, onExportComplete }: DatasetExpor
 
         const imagesFolder = zip.folder(`${splitName}/images`);
         const labelsFolder = exportFormat !== 'coco' ? zip.folder(`${splitName}/labels`) : null;
+        const splitImageDimensions: Array<{width: number, height: number}> = [];
 
         for (const image of splitImages) {
-          // Add image to zip
-          const imageBlob = await fetch(image.url).then(r => r.blob());
-          imagesFolder?.file(image.file.name, imageBlob);
+          try {
+            // Add image to zip - Blob'u direk kullan
+            let imageBlob: Blob;
+            if (image.url.startsWith('blob:')) {
+              imageBlob = await fetch(image.url).then(r => r.blob());
+            } else {
+              // File object'i direk kullan
+              imageBlob = image.file;
+            }
+            imagesFolder?.file(image.file.name, imageBlob);
 
-          // Get image dimensions
-          const img = document.createElement('img') as HTMLImageElement;
-          await new Promise<void>((resolve) => {
-            img.onload = () => resolve();
-            img.src = image.url;
-          });
+            // Get image dimensions with better error handling
+            const img = new Image();
+            const dimensions = await new Promise<{width: number, height: number}>((resolve, reject) => {
+              const timeout = setTimeout(() => {
+                reject(new Error('Image loading timeout'));
+              }, 5000); // 5 saniye timeout
+              
+              img.onload = () => {
+                clearTimeout(timeout);
+                resolve({ width: img.width, height: img.height });
+              };
+              
+              img.onerror = () => {
+                clearTimeout(timeout);
+                reject(new Error('Image loading failed'));
+              };
+              
+              img.src = image.url;
+            });
 
-          // Add labels based on format
-          if (exportFormat === 'yolo') {
-            const yoloLabels = convertToYOLO(image, img.width, img.height);
-            const labelFileName = image.file.name.replace(/\.[^/.]+$/, '.txt');
-            labelsFolder?.file(labelFileName, yoloLabels);
-          } else if (exportFormat === 'pascal') {
-            const xmlContent = convertToPascalVOC(image, img.width, img.height);
-            const xmlFileName = image.file.name.replace(/\.[^/.]+$/, '.xml');
-            labelsFolder?.file(xmlFileName, xmlContent);
+            // Store dimensions for COCO format
+            splitImageDimensions.push(dimensions);
+
+            // Add labels based on format
+            if (exportFormat === 'yolo') {
+              const yoloLabels = convertToYOLO(image, dimensions.width, dimensions.height);
+              const labelFileName = image.file.name.replace(/\.[^/.]+$/, '.txt');
+              labelsFolder?.file(labelFileName, yoloLabels);
+            } else if (exportFormat === 'pascal') {
+              const xmlContent = convertToPascalVOC(image, dimensions.width, dimensions.height);
+              const xmlFileName = image.file.name.replace(/\.[^/.]+$/, '.xml');
+              labelsFolder?.file(xmlFileName, xmlContent);
+            }
+
+            processedCount++;
+            setExportProgress((processedCount / totalImages) * 90); // 90%'a kadar
+          } catch (imageError) {
+            console.error(`Error processing image ${image.file.name}:`, imageError);
+            // Hatalı resmi atla ve devam et
+            processedCount++;
+            setExportProgress((processedCount / totalImages) * 90);
           }
-
-          processedCount++;
-          setExportProgress((processedCount / totalImages) * 100);
         }
 
         // Add COCO annotation file for each split
         if (exportFormat === 'coco') {
-          const cocoData = convertToCOCO();
-          zip.file(`${splitName}/annotations.json`, cocoData);
+          try {
+            const cocoData = convertToCOCO(splitImages, splitImageDimensions);
+            zip.file(`${splitName}/annotations.json`, cocoData);
+            setExportProgress(95); // COCO format için ekstra progress
+          } catch (cocoError) {
+            console.error('COCO format creation error:', cocoError);
+          }
         }
       }
 
@@ -223,6 +259,7 @@ export default function DatasetExport({ images, onExportComplete }: DatasetExpor
       };
 
       zip.file('dataset_info.json', JSON.stringify(datasetInfo, null, 2));
+      setExportProgress(98);
 
       // Add README
       const readme = `# AI Veri Etiketleme Platformu Dataset
@@ -290,18 +327,45 @@ Bu dataset AI Veri Etiketleme Platformu kullanılarak oluşturulmuştur.
 
       zip.file('README.md', readme);
 
-      // Generate and download zip
-      const content = await zip.generateAsync({ type: 'blob' });
-      saveAs(content, `dataset_${exportFormat}_${new Date().toISOString().split('T')[0]}.zip`);
+      // Generate and download zip with better compression
+      setExportProgress(99);
+      const content = await zip.generateAsync({ 
+        type: 'blob',
+        compression: 'DEFLATE',
+        compressionOptions: {
+          level: 6 // Orta seviye sıkıştırma (hız vs boyut dengesi)
+        }
+      });
+      
+      const fileName = `dataset_${exportFormat}_${new Date().toISOString().split('T')[0]}.zip`;
+      saveAs(content, fileName);
 
       setExportProgress(100);
+      
+      // Kullanıcıya başarı mesajı göster
       setTimeout(() => {
-        onExportComplete();
-      }, 1000);
+        alert(`Veri seti başarıyla dışa aktarıldı!\nDosya adı: ${fileName}`);
+        if (onExportComplete) {
+          onExportComplete();
+        }
+      }, 500);
 
     } catch (error) {
       console.error('Export error:', error);
-      alert('Dışa aktarma sırasında bir hata oluştu!');
+      let errorMessage = 'Dışa aktarma sırasında bir hata oluştu!';
+      
+      if (error instanceof Error) {
+        if (error.message.includes('timeout')) {
+          errorMessage += '\n\nHata: Resim yükleme zaman aşımı. Lütfen tekrar deneyin.';
+        } else if (error.message.includes('network')) {
+          errorMessage += '\n\nHata: Ağ bağlantısı sorunu. İnternet bağlantınızı kontrol edin.';
+        } else {
+          errorMessage += `\n\nDetay: ${error.message}`;
+        }
+      }
+      
+      alert(errorMessage);
+      setExportProgress(0);
     } finally {
       setIsExporting(false);
     }
