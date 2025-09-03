@@ -2,9 +2,9 @@
 
 Hızlı ve verimli görsel veri etiketleme ve augmentation platformu. YOLO, COCO ve Pascal VOC formatlarında veri seti oluşturun.
 
-##  Özellikler
+## 🚀 Özellikler
 
-###  Görsel Etiketleme
+### 📸 Görsel Etiketleme
 - **Canvas Tabanlı Etiketleme:** HTML5 Canvas API ile gerçek zamanlı bounding box çizimi
 - **Çoklu Görsel Desteği:** Birden fazla görseli aynı anda yükleme ve etiketleme
 - **Sınıf Yönetimi:** Özel sınıf isimleri tanımlama ve yönetme
@@ -13,36 +13,52 @@ Hızlı ve verimli görsel veri etiketleme ve augmentation platformu. YOLO, COCO
 - **Etiket Görünürlük Kontrolü:** Etiketleri göster/gizle özelliği
 - **Görsel Gezinme:** İleri/geri butonları ile kolay geçiş
 
-###  Veri Augmentation
-- **12 Farklı Efekt:** Blur, Brightness, Contrast, Rotation, Noise, Flip, Saturation, Hue, Gamma, Sharpen, Emboss, Sepia
-- **Min-Max Kontrolü:** Her efekt için özelleştirilebilir değer aralıkları
-- **Adet Yönetimi:** Her efekt için ayrı ayrı üretilecek veri adedi belirleme
-- **Gerçek Zamanlı Önizleme:** Efektlerin küçük örneklerde önizlemesi
+### 🔄 Gelişmiş Veri Augmentation
+- **20+ Farklı Efekt:** Geometrik dönüşümler, renk efektleri, gürültü filtreleri, hava durumu efektleri
+  - **Geometrik:** Rotation, Scaling, Translation, Flip (Yatay/Dikey)
+  - **Renk:** Brightness, Contrast, Saturation, Hue, Gamma Correction
+  - **Gürültü:** Gaussian Noise, Salt-Pepper Noise, Gaussian Blur, Sharpen
+  - **Gelişmiş:** Cutout, Emboss, Sepia
+  - **Hava Durumu:** Rain, Snow, Fog Effects
+- **Akıllı Parametre Kontrolleri:** Her efekt için optimize edilmiş slider konfigürasyonları
+- **Gerçek Zamanlı Önizleme:** Efektlerin canlı önizlemesi ve interaktif slider kontrolleri
+- **Canvas Optimizasyonu:** willReadFrequently ile performans iyileştirmesi
 - **Batch İşleme:** Tüm etiketlenmiş görseller için toplu augmentation
-- **Önizleme Sidebar:** Aktif efektlerin gerçek zamanlı önizlemesi
+- **Progress Tracking:** Efekt bazlı ilerleme takibi ve detaylı durum göstergeleri
+- **Blob URL Yönetimi:** Gelişmiş bellek yönetimi ve hata önleme
+- **Kategori Sistemi:** Efektlerin mantıklı gruplara ayrılması
 
-###  Veri Dışa Aktarma
+### 📦 Gelişmiş Veri Dışa Aktarma
 - **Çoklu Format Desteği:** YOLO, COCO, Pascal VOC
 - **Otomatik Klasör Yapısı:** Format standartlarına uygun dizin organizasyonu
-- **ZIP Arşivleme:** Tüm verileri tek dosyada indirme
+- **COCO Format Optimizasyonu:** Split-specific image dimensions tracking
+- **ZIP Arşivleme:** Gelişmiş sıkıştırma algoritmaları ile hızlı indirme
 - **Split Oranları:** Train/Validation/Test ayrımı için özelleştirilebilir oranlar
-- **Progress Tracking:** İşlem durumu ve ilerleme göstergeleri
+- **Progress Tracking:** Gerçek zamanlı işlem durumu ve ilerleme göstergeleri
+- **Hata Yönetimi:** Timeout, network ve dosya hatalarına özel mesajlar
+- **Dataset Dokümantasyonu:** Otomatik README ve dataset_info.json oluşturma
+- **Bellek Optimizasyonu:** Büyük dosyalar için gelişmiş bellek yönetimi
 
-###  Çoklu Dil Desteği
-- **Türkçe ve İngilizce:** Tam arayüz çevirisi
+### 🌐 Kapsamlı Çoklu Dil Desteği
+- **Türkçe ve İngilizce:** 130+ çeviri anahtarı ile tam arayüz çevirisi
 - **Dinamik Dil Değişimi:** Sayfa yenilenmeden dil değiştirme
 - **Dil Seçici:** Header'da kolay dil değiştirme
-- **Kapsamlı Çeviri:** Tüm arayüz metinleri çevrildi
+- **Kapsamlı Çeviri:** Tüm arayüz metinleri, hata mesajları ve debug çıktıları çevrildi
+- **TypeScript Desteği:** Tip güvenli çeviri anahtarları
+- **Console Mesajları:** Debug ve hata mesajları da çoklu dil destekli
 
-###  Kullanıcı Deneyimi
+### 🎨 Gelişmiş Kullanıcı Deneyimi
 - **Drag & Drop:** Sürükle-bırak ile kolay dosya yükleme
 - **Responsive Tasarım:** Mobil ve masaüstü uyumlu arayüz
-- **Progress Tracking:** İşlem durumu ve ilerleme göstergeleri
-- **Error Handling:** Kullanıcı dostu hata mesajları
-- **Memory Management:** Otomatik bellek temizleme ve optimizasyon
+- **Gelişmiş Progress Tracking:** Efekt bazlı ilerleme ve durum göstergeleri
+- **Akıllı Error Handling:** Detaylı hata kategorileri ve çözüm önerileri
+- **Canvas Yönetimi:** Gelişmiş canvas hazırlık kontrolü ve timeout mekanizmaları
+- **Memory Management:** Otomatik blob URL temizleme ve bellek optimizasyonu
 - **Modern UI:** Tailwind CSS ile şık ve modern arayüz
+- **Interaktif Önizleme:** Slider kontrolü ile gerçek zamanlı efekt önizlemesi
+- **Debug Araçları:** Canvas durumu ve işlem takibi için geliştirici araçları
 
-##  Teknolojiler
+## 🛠️ Teknolojiler
 
 - **Frontend:** Next.js 13.5.11, React 18.2.0, TypeScript 5.2.2
 - **Styling:** Tailwind CSS 3.3.3
@@ -53,17 +69,17 @@ Hızlı ve verimli görsel veri etiketleme ve augmentation platformu. YOLO, COCO
 - **Performance:** Next.js Image optimization, debouncing, offscreen canvas
 - **Internationalization:** Custom i18n system for Turkish and English
 
-##  Gereksinimler
+## 📋 Gereksinimler
 
 - Node.js 18.0.0 veya üzeri
 - npm 9.0.0 veya üzeri
 - Modern web tarayıcısı (Chrome, Firefox, Safari, Edge)
 
-##  Kurulum
+## 🚀 Kurulum
 
 1. **Projeyi klonlayın:**
 ```bash
-git clone https://github.com/your-username/OneShotLabeler.git
+git clone https://github.com/oneshotlabeler/OneShotLabeler.git
 cd OneShotLabeler
 ```
 
@@ -116,7 +132,7 @@ http://localhost:3000
 - Türkçe ve İngilizce arasında geçiş yapın
 - Değişiklik anında uygulanır
 
-##  Proje Yapısı
+## 📁 Proje Yapısı
 
 ```
 OneShotLabeler/
@@ -142,7 +158,7 @@ OneShotLabeler/
 └── tsconfig.json          # TypeScript yapılandırması
 ```
 
-##  Geliştirme
+## 🔧 Geliştirme
 
 ### Linting
 ```bash
@@ -164,14 +180,28 @@ npm run build
 npm start
 ```
 
-##  Teknik Detaylar
+## 🎯 Teknik Detaylar ve Optimizasyonlar
 
-### Performans Optimizasyonları
-- **Next.js Image Component:** Otomatik görsel optimizasyonu
-- **Offscreen Canvas:** UI blocking'i önlemek için
+### Canvas Performans İyileştirmeleri
+- **willReadFrequently Optimizasyonu:** Sık erişilen canvas contextleri için performans artışı
+- **Canvas Hazırlık Kontrolü:** Çoklu timeout kontrolü ile güvenilir canvas erişimi
+- **Blob URL Yönetimi:** Her işlem için fresh blob URL oluşturma ve temizleme
+- **Offscreen Canvas:** UI blocking'i önlemek için arka plan işlemleri
 - **Debouncing:** Canvas yeniden çizimlerini optimize etme
-- **Memory Management:** URL.revokeObjectURL ile bellek temizleme
-- **Bundle Splitting:** Webpack optimizasyonları
+
+### Augmentation Motor İyileştirmeleri
+- **Efekt Bazlı Progress:** Her efekt için ayrı ilerleme takibi
+- **Hata Toleransı:** Başarısız efektleri atlayarak işleme devam etme
+- **Bellek Optimizasyonu:** Büyük görseller için akıllı bellek yönetimi
+- **Flip Efekti:** 0=yatay, 1=dikey değerleri ile scale transformation
+- **Rotation Desteği:** -180° ile +180° arası tam rotasyon desteği
+
+### Export Sistemi Geliştirmeleri
+- **COCO Format:** Split-specific image dimensions tracking implementasyonu
+- **Timeout Yönetimi:** Görsel yükleme için akıllı timeout mekanizmaları
+- **Hata Kategorileri:** Timeout, network, file not found için özel mesajlar
+- **Progress Optimizasyonu:** Gerçek zamanlı ilerleme güncellemeleri
+- **Sıkıştırma:** Orta seviye sıkıştırma ile hız-boyut dengesi
 
 ### Güvenlik
 - **Next.js Security Headers:** X-Frame-Options, X-Content-Type-Options
@@ -188,7 +218,7 @@ npm start
 - **TypeScript Support:** Tip güvenli çeviri anahtarları
 - **Dynamic Language Switching:** Gerçek zamanlı dil değişimi
 
-##  Çoklu Dil Desteği
+## 🌐 Çoklu Dil Desteği
 
 Uygulama hem Türkçe hem İngilizce dil desteği sunar:
 
@@ -202,52 +232,90 @@ Uygulama hem Türkçe hem İngilizce dil desteği sunar:
 - İngilizce hata mesajları
 - İngilizce dokümantasyon
 
-##  Bilinen Sorunlar
+## 🐛 Çözülmüş Sorunlar ve İyileştirmeler
 
-- Büyük dosyalar (>10MB) yavaş yüklenebilir
-- Çok fazla augmentation efekti aynı anda kullanıldığında performans düşebilir
-- Bazı eski tarayıcılarda canvas API desteği sınırlı olabilir
+### Canvas ve Görsel İşleme
+- ✅ **Canvas Hazırlık Kontrolü:** Sonsuz döngü sorunları çözüldü
+- ✅ **Blob URL Yönetimi:** ERR_FILE_NOT_FOUND hataları giderildi
+- ✅ **willReadFrequently:** Canvas performans uyarıları çözüldü
+- ✅ **Flip ve Rotation Efektleri:** Çevirme ve döndürme işlemleri düzeltildi
 
-##  Gelecek Özellikler
+### Augmentation Sistemi
+- ✅ **Progress Bar:** Efekt bazlı ilerleme takibi implementasyonu
+- ✅ **Hata Toleransı:** Başarısız görselleri atlayarak devam etme
+- ✅ **Bellek Sızıntıları:** Comprehensive blob URL cleanup
+- ✅ **Infinite Loop:** useEffect dependency optimizasyonları
 
-- [ ] AI destekli otomatik etiketleme
-- [ ] Daha fazla augmentation efekti
-- [ ] Cloud storage entegrasyonu
-- [ ] Takım çalışması özellikleri
-- [ ] API desteği
-- [ ] Mobile app
-- [ ] Batch processing için queue sistemi
-- [ ] Advanced filtering ve search
-- [ ] Export formatları genişletme
-- [ ] Real-time collaboration
-- [ ] Daha fazla dil desteği (Almanca, Fransızca, İspanyolca)
+### Export Sistemi
+- ✅ **COCO Format:** Split-specific dimensions tracking
+- ✅ **Boş ZIP Klasörleri:** COCO format export düzeltmeleri
+- ✅ **Timeout İşleme:** Büyük dosyalar için gelişmiş timeout yönetimi
+- ✅ **Hata Mesajları:** Detaylı hata kategorileri ve çözüm önerileri
+
+### Çoklu Dil Sistemi
+- ✅ **Kapsamlı Çeviri:** 130+ çeviri anahtarı ile tam kapsama
+- ✅ **Console Mesajları:** Debug çıktıları da çevrildi
+- ✅ **TypeScript Desteği:** Tip güvenli çeviri sistemi
+
+## 🚧 Gelecek Özellikler
+
+### Kısa Vadeli (v2.0)
+- [ ] Keyboard shortcuts (Ctrl+Z undo, arrow keys navigation)
 - [ ] Dark mode desteği
-- [ ] Keyboard shortcuts
-- [ ] Undo/Redo özellikleri
+- [ ] Daha fazla augmentation efekti (Mosaic, CutMix, MixUp)
+- [ ] Advanced filtering ve search
+- [ ] Batch import/export iyileştirmeleri
 
-##  Lisans
+### Orta Vadeli (v3.0)
+- [ ] AI destekli otomatik etiketleme
+- [ ] Cloud storage entegrasyonu (AWS S3, Google Cloud)
+- [ ] API desteği ve RESTful endpoints
+- [ ] Real-time collaboration ve takım çalışması
+- [ ] Mobile app (React Native)
+- [ ] Advanced analytics ve reporting
+
+### Uzun Vadeli (v4.0+)
+- [ ] Daha fazla dil desteği (Almanca, Fransızca, İspanyolca, Çince)
+- [ ] Video annotation desteği
+- [ ] 3D object detection
+- [ ] Custom model training integration
+- [ ] Enterprise features (SSO, audit logs)
+- [ ] Plugin sistemi ve extensibility
+
+## 📄 Lisans
 
 Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
 
-##  Katkıda Bulunanlar
+## 👥 Katkıda Bulunanlar
 
-- **Geliştirici:** OneShotLabeler Team
+- **Geliştirici:** Mustafa Barış Arslantaş
 - **Tasarım:** Modern UI/UX principles
 - **Test:** Community feedback
 
-##  İletişim
+## 📞 İletişim
 
-- **GitHub:** [OneShotLabeler Repository](https://github.com/your-username/OneShotLabeler)
-- **Email:** support@oneshotlabeler.com
-- **Discord:** [OneShotLabeler Community](https://discord.gg/oneshotlabeler)
+- **GitHub:** [OneShotLabeler Repository](https://github.com/ArslantasM/OneShotLabeler)
+- **Email:** contact@oneshotlabeler.com
+- **Website:** [oneshotlabeler.com](https://oneshotlabeler.com)
 
-##  Teşekkürler
+## 🙏 Teşekkürler
 
 - Next.js ekibine harika framework için
 - Tailwind CSS ekibine mükemmel CSS framework için
 - Lucide ekibine güzel ikonlar için
 - Tüm open source katkıda bulunanlara
+- Makine öğrenmesi ve veri etiketleme alanına katkı sunan herkese
 
 ---
 
-**OneShotLabeler** - Veri etiketleme platformu ile makine öğrenmesi projelerinizi hızlandırın! 
+**OneShotLabeler v1.5** - Gelişmiş AI destekli veri etiketleme platformu ile makine öğrenmesi projelerinizi hızlandırın! 🚀
+
+> **Son Güncelleme:** Kapsamlı augmentation sistemi, gelişmiş canvas yönetimi, çoklu dil desteği ve performans optimizasyonları ile tamamen yenilendi.
+
+**Öne Çıkan Yenilikler:**
+- 🎨 20+ augmentation efekti
+- ⚡ Canvas performans optimizasyonları
+- 🌐 130+ çeviri anahtarı ile tam çoklu dil desteği
+- 🔧 Gelişmiş hata yönetimi ve debug araçları
+- 📊 Efekt bazlı progress tracking
+- 💾 Akıllı bellek yönetimi
