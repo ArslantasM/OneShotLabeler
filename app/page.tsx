@@ -50,18 +50,35 @@ export default function Home() {
     setError(null);
 
     try {
-      const newImages: ImageFile[] = Array.from(files).map((file, index) => ({
-        id: `${Date.now()}-${index}`,
-        file,
-        url: URL.createObjectURL(file),
-        labels: []
-      }));
+      // Clean up existing URLs before creating new ones
+      images.forEach(image => {
+        URL.revokeObjectURL(image.url);
+      });
 
+      const newImages: ImageFile[] = Array.from(files).map((file, index) => {
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+          throw new Error(`Invalid file type: ${file.type}`);
+        }
+        
+        const url = URL.createObjectURL(file);
+        console.log('Created new URL for', file.name, ':', url);
+        
+        return {
+          id: `${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
+          file,
+          url,
+          labels: []
+        };
+      });
+
+      console.log('Uploaded', newImages.length, 'new images');
       setImages(newImages);
       setCurrentImageIndex(0);
       setCurrentStep('labeling');
     } catch (err) {
-      setError('Dosya yükleme sırasında bir hata oluştu.');
+      console.error('File upload error:', err);
+      setError(`Dosya yükleme sırasında bir hata oluştu: ${err instanceof Error ? err.message : 'Bilinmeyen hata'}`);
     } finally {
       setIsLoading(false);
     }
@@ -176,6 +193,7 @@ export default function Home() {
 
         {currentStep === 'labeling' && images.length > 0 && (
           <ImageLabeling
+            key={`labeling-${images[0]?.id}-${currentImageIndex}`}
             images={images}
             currentIndex={currentImageIndex}
             onImageLabeled={handleImageLabeled}
